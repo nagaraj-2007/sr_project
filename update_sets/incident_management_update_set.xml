@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ServiceNow Update Set Export
+  Project:  Incident Management — High Impact Control
+  Version:  1.0.0
+  Exported: 2026-09-29
+  Instance: <your-instance>.service-now.com (replace before importing)
+
+  Contents:
+    - Client Script: High Impact Control (onChange, impact field)
+    - UI Policy: High Impact Mandatory Fields
+    - UI Policy: Hide Resolution Fields Until Resolved/Closed
+-->
+<unload log_entry="false">
+  <sys_remote_update_set action="INSERT_OR_UPDATE">
+    <description>Incident Management customizations: High Impact Control client scripts and UI policies</description>
+    <name>Incident Management - High Impact Control v1.0</name>
+    <origin_sys_id/>
+    <remote_sys_id/>
+    <state>loaded</state>
+    <sys_class_name>sys_remote_update_set</sys_class_name>
+    <sys_id>REPLACE_WITH_GENERATED_SYS_ID</sys_id>
+  </sys_remote_update_set>
+
+  <!-- ═══════════════════════════════════════════
+       CLIENT SCRIPT: High Impact Control
+       ═══════════════════════════════════════════ -->
+  <sys_script_client action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <applies_extended>false</applies_extended>
+    <description>Enforces mandatory fields when Impact is set to High on the Incident form.</description>
+    <field_name>impact</field_name>
+    <form_name/>
+    <global>true</global>
+    <message/>
+    <name>High Impact Control</name>
+    <script><![CDATA[
+function onChange(control, oldValue, newValue, isLoading) {
+  if (isLoading || newValue === oldValue) { return; }
+  var HIGH_IMPACT = "1";
+  if (newValue === HIGH_IMPACT) {
+    g_form.setMandatory('assignment_group', true);
+    g_form.setMandatory('assigned_to', true);
+    g_form.setMandatory('business_service', true);
+    g_form.setVisible('assignment_group', true);
+    g_form.setVisible('assigned_to', true);
+    g_form.setVisible('business_service', true);
+    g_form.addInfoMessage('High Impact incident detected. Assignment Group, Assigned To, and Business Service are now required.');
+  } else {
+    g_form.setMandatory('assignment_group', false);
+    g_form.setMandatory('assigned_to', false);
+    g_form.setMandatory('business_service', false);
+    g_form.clearMessages();
+  }
+}
+    ]]></script>
+    <sys_class_name>sys_script_client</sys_class_name>
+    <sys_id>REPLACE_WITH_GENERATED_SYS_ID_CS1</sys_id>
+    <table>incident</table>
+    <type>onChange</type>
+    <ui_type>0</ui_type>
+  </sys_script_client>
+
+  <!-- ═══════════════════════════════════════════
+       UI POLICY: High Impact Mandatory Fields
+       ═══════════════════════════════════════════ -->
+  <sys_ui_policy action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <conditions>impact=1</conditions>
+    <description>Makes Assignment Group, Assigned To, and Business Service mandatory when Impact is High.</description>
+    <model/>
+    <name>High Impact Mandatory Fields</name>
+    <on_load>true</on_load>
+    <reverse_if_false>true</reverse_if_false>
+    <run_scripts>true</run_scripts>
+    <script_false><![CDATA[
+function onConditionElse() {
+  g_form.hideFieldMsg('priority', true);
+}
+    ]]></script_false>
+    <script_true><![CDATA[
+function onCondition() {
+  g_form.showFieldMsg('priority', 'High Impact: Ensure escalation procedures are followed.', 'info');
+}
+    ]]></script_true>
+    <sys_class_name>sys_ui_policy</sys_class_name>
+    <sys_id>REPLACE_WITH_GENERATED_SYS_ID_UP1</sys_id>
+    <table>incident</table>
+    <view/>
+  </sys_ui_policy>
+
+  <!-- UI Policy Actions for High Impact Mandatory Fields -->
+  <sys_ui_policy_action action="INSERT_OR_UPDATE">
+    <field>assignment_group</field>
+    <mandatory>true</mandatory>
+    <readonly>false</readonly>
+    <sys_id>REPLACE_WITH_GENERATED_SYS_ID_UPA1</sys_id>
+    <sys_ui_policy>REPLACE_WITH_GENERATED_SYS_ID_UP1</sys_ui_policy>
+    <visible>true</visible>
+  </sys_ui_policy_action>
+  <sys_ui_policy_action action="INSERT_OR_UPDATE">
+    <field>assigned_to</field>
+    <mandatory>true</mandatory>
+    <readonly>false</readonly>
+    <sys_id>REPLACE_WITH_GENERATED_SYS_ID_UPA2</sys_id>
+    <sys_ui_policy>REPLACE_WITH_GENERATED_SYS_ID_UP1</sys_ui_policy>
+    <visible>true</visible>
+  </sys_ui_policy_action>
+  <sys_ui_policy_action action="INSERT_OR_UPDATE">
+    <field>business_service</field>
+    <mandatory>true</mandatory>
+    <readonly>false</readonly>
+    <sys_id>REPLACE_WITH_GENERATED_SYS_ID_UPA3</sys_id>
+    <sys_ui_policy>REPLACE_WITH_GENERATED_SYS_ID_UP1</sys_ui_policy>
+    <visible>true</visible>
+  </sys_ui_policy_action>
+
+</unload>

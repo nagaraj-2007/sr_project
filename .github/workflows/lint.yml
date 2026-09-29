@@ -1,0 +1,42 @@
+name: JavaScript Lint
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'scripts/**/*.js'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'scripts/**/*.js'
+
+jobs:
+  lint:
+    name: Lint ServiceNow Scripts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install ESLint
+        run: npm install -g eslint
+
+      - name: Run ESLint on Client Scripts
+        run: |
+          eslint scripts/client_scripts/*.js \
+            --env browser \
+            --rule '{"no-undef": "off"}' \
+            --format stylish
+
+      - name: Run ESLint on UI Policy Scripts
+        run: |
+          eslint scripts/ui_policies/*.js \
+            --env browser \
+            --rule '{"no-undef": "off"}' \
+            --format stylish

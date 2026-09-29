@@ -1,0 +1,57 @@
+# ─────────────────────────────────────────────
+# ServiceNow GitHub Project — .gitignore
+# ─────────────────────────────────────────────
+
+# ── Secrets & Credentials ──────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.json
+credentials.json
+
+# ── Dependencies & Packages ────────────────────
+node_modules/
+venv/
+.venv/
+vendor/
+__pycache__/
+*.py[cod]
+
+# ── Build Outputs & Compiled Files ────────────
+dist/
+build/
+target/
+*.class
+*.jar
+*.dll
+*.exe
+*.war
+
+# ── Logs & Temporary Files ────────────────────
+*.log
+*.tmp
+*.temp
+.cache/
+tmp/
+temp/
+
+# ── Editor & OS Metadata ──────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+
+# ── ServiceNow-Specific Exclusions ────────────
+# Never commit instance-specific config or personal tokens
+sn_instance_config.json
+sn_auth.json
+.snconfig
